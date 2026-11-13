@@ -30,7 +30,7 @@ jobs:
         with:
           mask-aws-account-id: true
           role-session-name: ${{ vars.SERVICE_NAME }}-build-and-push-from-github-actions
-          role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Login to AWS ECR
