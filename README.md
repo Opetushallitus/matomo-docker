@@ -38,7 +38,7 @@ Run image with local 'config.ini.php'.
 ```
  docker run --rm -it --name "matomo-${matomo_version}" -v "$PWD/config.ini.php:/var/www/html/config/config.ini.php" "matomo:${matomo_version}" bash
 ```
-Check container and exit by pressing 'q'.
+Check container and exit by pressing 'Ctrl + d'.
 
 ```
  docker rmi "matomo:${matomo_version}"
