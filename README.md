@@ -24,9 +24,9 @@ Check Matomo version image index digest (multi-platform builds) and add it to th
 ```
 Add values to '.env' file.
 
-Generate config file.
+Generate config file and check values.
 ```
- (set -a && source .env && set +a && envsubst <config.ini.php.template >config.ini.php)
+ (set -a && source .env && set +a && envsubst <config.ini.php.template >config.ini.php && cat config.ini.php)
 ```
 
 Build image.
@@ -34,14 +34,15 @@ Build image.
  docker build -t "matomo:${matomo_version}" .
 ```
 
-Run image with local 'config.ini.php'.
+Run temporary container, generate 'config.ini.php' inside container and check values.
 ```
- docker run --rm -it --name "matomo-${matomo_version}" -v "$PWD/config.ini.php:/var/www/html/config/config.ini.php" "matomo:${matomo_version}" bash
+ docker run --rm -it --name "matomo-${matomo_version}" --env-file .env "matomo:${matomo_version}" bash -c 'envsubst <config/config.ini.php.template >config/config.ini.php && cat config/config.ini.php'
 ```
-Check container and exit by pressing 'Ctrl + d'.
 
+Clean local resources.
 ```
  docker rmi "matomo:${matomo_version}"
+ rm config.ini.php .env
 ```
 
 Push changes to git repo main branch, wait for GitHub Actions to build new image and finally update IaC with the new tag.
