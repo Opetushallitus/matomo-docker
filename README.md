@@ -1,26 +1,27 @@
 # matomo-docker
 Dockerfile to create a custom matomo config that persist with container restart
 
-### Update Matomo
+### Update Matomo version
 
 Check Matomo version image index digest (multi-platform builds) and add it to the Dockerfile.
+
+Add Matomo version.
 ```
- export matomo_version='5.14.2'
+ export matomo_version='<major>.<minor>.<patch>'
 ```
 
+Generate configs.
 ```
- export matomo_version_digest=$(docker buildx imagetools inspect matomo:${matomo_version} --format '{{json .}}' | jq -rc '.manifest.digest')
-```
-
-```
- sed -i "s|^# matomo:.*|# matomo:${matomo_version}|g" Dockerfile
- sed -i "s|^FROM .*|FROM public.ecr.aws/docker/library/matomo@${matomo_version_digest}|g" Dockerfile
+ ./generate-configs.sh
 ```
 
-### Test build locally before pushing changes
+### Update Matomo configurations
 
+Make changes to 'config.ini.php.template' file.
+
+Generate '.env' file.
 ```
- cp .env.template .env
+ awk '{while(match($0,/\$\{[A-Za-z_][A-Za-z0-9_]*\}/)){v=substr($0,RSTART+2,RLENGTH-3);if(!seen[v]++)print v"=";$0=substr($0,RSTART+RLENGTH)}}' config.ini.php.template >.env
 ```
 Add values to '.env' file.
 
@@ -29,17 +30,14 @@ Generate config file and check values.
  (set -a && source .env && set +a && envsubst <config.ini.php.template >config.ini.php && cat config.ini.php)
 ```
 
-Build image.
+### Test build locally before pushing changes
+
+Test containers locally.
 ```
- docker build -t "matomo:${matomo_version}" .
+ ./test-locally.sh
 ```
 
-Run temporary container, generate 'config.ini.php' inside container and check values.
-```
- docker run --rm -it --name "matomo-${matomo_version}" --env-file .env "matomo:${matomo_version}" bash -c 'envsubst <config/config.ini.php.template >config/config.ini.php && cat config/config.ini.php'
-```
-
-Clean local resources.
+Clean test resources.
 ```
  docker rmi "matomo:${matomo_version}"
  rm config.ini.php .env

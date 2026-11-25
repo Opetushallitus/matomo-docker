@@ -2,17 +2,15 @@
 ; file automatically generated or modified by Matomo; you can manually override the default values in global.ini.php by redefining them in this file.
 [database]
 host = "${MATOMO_DATABASE_HOST}"
-port = "${MATOMO_DATABASE_PORT}"
 username = "${MATOMO_DATABASE_USERNAME}"
 password = "${MATOMO_DATABASE_PASSWORD}"
 dbname = "${MATOMO_DATABASE_DBNAME}"
 tables_prefix = "${MATOMO_DATABASE_TABLES_PREFIX}"
-adapter = "${MATOMO_DATABASE_ADAPTER}"
-type = "${MATOMO_DATABASE_TYPE}"
 schema = "${MATOMO_DATABASE_SCHEMA}"
 charset = "${MATOMO_DATABASE_CHARSET}"
 
 [General]
+noreply_email_name = "${MATOMO_GENERAL_NOREPLY_EMAIL_NAME}"
 proxy_client_headers[] = "${MATOMO_GENERAL_PROXY_CLIENT_HEADERS}"
 salt = "${MATOMO_GENERAL_SALT}"
 trusted_hosts[] = "${MATOMO_GENERAL_TRUSTED_HOSTS}"
